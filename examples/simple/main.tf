@@ -17,10 +17,11 @@ data "aws_iam_policy_document" "assume_custom_role_example" {
 }
 
 module "codebuild" {
-  source         = "../../"
-  service_name   = "beisvc2"
-  product_domain = "bei"
-  description    = "build project for backend service 2 release"
+  source          = "../../"
+  service_name    = "beisvc2"
+  product_domain  = "bei"
+  description     = "build project for backend service 2 release"
+  artifact_bucket = "abc"
 
   pre_build_commands = [
     "echo \"Starting build for commit $${CODEBUILD_SOURCE_VERSION}\"",
@@ -39,5 +40,5 @@ module "codebuild" {
     "${data.aws_iam_policy_document.assume_custom_role_example.json}",
   ]
 
-  github_repository_url = "https://github.com/traveloka/backend-beisvc2.git"
+  source_repository_url = "https://github.com/traveloka/backend-beisvc2.git"
 }

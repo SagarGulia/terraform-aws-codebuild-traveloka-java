@@ -9,6 +9,6 @@ output "buildspec" {
 }
 
 output "role_arn" {
-  value       = "${aws_iam_role.this.arn}"
+  value       = "${module.codebuild_role.role_arn}"
   description = "The project's IAM role ARN"
 }

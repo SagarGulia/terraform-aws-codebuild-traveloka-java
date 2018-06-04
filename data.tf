@@ -38,7 +38,19 @@ data "aws_iam_policy_document" "this" {
     ]
 
     resources = [
-      "arn:aws:s3:::${aws_s3_bucket.cache.bucket}/*",
+      "arn:aws:s3:::${aws_s3_bucket.cache.bucket}/${local.name}/*",
+    ]
+  }
+
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "s3:PutObject",
+    ]
+
+    resources = [
+      "arn:aws:s3:::${var.artifact_bucket}/${local.name}/*",
     ]
   }
 }

@@ -30,15 +30,20 @@ variable "post_build_commands" {
   description = "Commands for the post_build phase"
 }
 
-variable "github_repository_url" {
+variable "source_type" {
   type        = "string"
-  description = "The GitHub repository URL"
+  default     = "GITHUB"
+  description = "The type of repository that contains the source code to be built. See https://www.terraform.io/docs/providers/aws/r/codebuild_project.html#type-3"
 }
 
-variable "additional_policies" {
-  type        = "list"
-  default     = []
-  description = "Additional policies in JSONs to be given to the build project's role"
+variable "source_repository_url" {
+  type        = "string"
+  description = "The source repository URL"
+}
+
+variable "artifact_bucket" {
+  type        = "string"
+  description = "An S3 bucket to store build artifacts / binaries to"
 }
 
 variable "compute_type" {
@@ -51,4 +56,22 @@ variable "timeout" {
   type        = "string"
   default     = 60
   description = "The build timeout after which project will be stopped and considered to be failed"
+}
+
+variable "git_clone_depth" {
+  type        = "string"
+  default     = 1
+  description = "The history depth with which the repository will be cloned. Setting this to 0 means full clone"
+}
+
+variable "image" {
+  type        = "string"
+  default     = "traveloka/codebuild-openjdk:latest"
+  description = "The image that CodeBuild will use to execute the build steps"
+}
+
+variable "additional_policies" {
+  type        = "list"
+  default     = []
+  description = "Additional policies in JSONs to be given to the build project's role"
 }
