@@ -61,8 +61,6 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - wget -N https://raw.githubusercontent.com/traveloka/aws-sudo/master/aws-sudo.sh
-      - chmod +x aws-sudo.sh
       - $${pre_build_commands}
   build:
     commands:
@@ -72,7 +70,6 @@ phases:
       - $${post_build_commands}
 cache:
   paths:
-    - aws-sudo.sh
     - /root/.gradle/caches/**/*
     - /root/.gradle/wrapper/**/*
 EOF
