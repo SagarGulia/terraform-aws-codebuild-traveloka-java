@@ -1,3 +1,9 @@
+variable "name" {
+  type        = "string"
+  default     = ""
+  description = "The project name. If unspecified, this will be <service_name>-release-build"
+}
+
 variable "service_name" {
   type        = "string"
   description = "The service name that will be released"
@@ -43,7 +49,14 @@ variable "source_repository_url" {
 
 variable "artifact_bucket" {
   type        = "string"
-  description = "An S3 bucket to store build artifacts / binaries to"
+  default     = ""
+  description = "An S3 bucket to store build artifacts / binaries (in <artifact_bucket>/<codebuild_project_name>/ path) to"
+}
+
+variable "cache_bucket" {
+  type        = "string"
+  default     = ""
+  description = "An S3 bucket to store build caches (in <cache_bucket>/<codebuild_project_name>/ path) to"
 }
 
 variable "compute_type" {

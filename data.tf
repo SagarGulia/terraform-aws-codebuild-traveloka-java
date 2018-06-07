@@ -24,8 +24,8 @@ data "aws_iam_policy_document" "this" {
     ]
 
     resources = [
-      "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/${local.name}",
-      "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/${local.name}:*",
+      "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/${var.name}",
+      "arn:aws:logs:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:log-group:/aws/codebuild/${var.name}:*",
     ]
   }
 
@@ -38,7 +38,7 @@ data "aws_iam_policy_document" "this" {
     ]
 
     resources = [
-      "arn:aws:s3:::${aws_s3_bucket.cache.bucket}/${local.name}/*",
+      "arn:aws:s3:::${var.cache_bucket}/${var.name}/*",
     ]
   }
 
@@ -50,7 +50,7 @@ data "aws_iam_policy_document" "this" {
     ]
 
     resources = [
-      "arn:aws:s3:::${var.artifact_bucket}/${local.name}/*",
+      "arn:aws:s3:::${var.artifact_bucket}/${var.name}/*",
     ]
   }
 }
@@ -70,11 +70,11 @@ phases:
       - $${post_build_commands}
 cache:
   paths:
-    - /root/.gradle/caches/**/*
-    - /root/.gradle/wrapper/**/*
+    - $${build_cache}
 EOF
 
   vars {
+    build_cache         = "${join("\n    - ", local.gradle_cache_dirs)}"
     pre_build_commands  = "${join("\n      - ", var.pre_build_commands)}"
     build_commands      = "${join("\n      - ", var.build_commands)}"
     post_build_commands = "${join("\n      - ", var.post_build_commands)}"

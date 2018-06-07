@@ -1,20 +1,20 @@
 resource "aws_codebuild_project" "this" {
-  name          = "${local.name}"
+  name          = "${var.name}"
   description   = "${var.description}"
   service_role  = "${module.codebuild_role.role_arn}"
   build_timeout = "${var.timeout}"
 
   artifacts {
-    type           = "S3"
+    type           = "${var.artifact_bucket == "" ? "NO_ARTIFACTS" : "S3"}"
     location       = "${var.artifact_bucket}"
-    path           = "${local.name}"
+    path           = "${var.name}"
     namespace_type = "BUILD_ID"
     packaging      = "NONE"
   }
 
   cache {
-    type     = "NO_CACHE"
-    location = "${module.cache_bucket_name.name}/${local.name}"
+    type     = "${var.cache_bucket == "" ? "NO_CACHE" : "S3"}"
+    location = "${var.cache_bucket}/${var.name}"
   }
 
   environment {
@@ -24,7 +24,7 @@ resource "aws_codebuild_project" "this" {
 
     environment_variable {
       "name"  = "GRADLE_USER_HOME"
-      "value" = ".gradle"
+      "value" = "${local.gradle_user_home}"
     }
   }
 
@@ -44,8 +44,8 @@ resource "aws_codebuild_project" "this" {
 
 module "codebuild_role" {
   source                     = "github.com/traveloka/terraform-aws-iam-role.git//modules/service?ref=v0.4.3"
-  role_identifier            = "${local.name}"
-  role_description           = "Service Role for ${local.name}"
+  role_identifier            = "${var.name}"
+  role_description           = "Service Role for ${var.name}"
   role_force_detach_policies = true
   role_max_session_duration  = 43200
 
@@ -63,44 +63,4 @@ resource "aws_iam_role_policy" "additional" {
   role        = "${module.codebuild_role.role_name}"
   policy      = "${var.additional_policies[count.index]}"
   count       = "${length(var.additional_policies)}"
-}
-
-module "cache_bucket_name" {
-  source = "github.com/traveloka/terraform-aws-resource-naming?ref=v0.7.1"
-
-  name_prefix   = "${var.service_name}-codebuild-cache-${data.aws_caller_identity.current.account_id}-"
-  resource_type = "s3_bucket"
-}
-
-resource "aws_s3_bucket" "cache" {
-  bucket        = "${module.cache_bucket_name.name}"
-  acl           = "private"
-  force_destroy = true
-  region        = "${data.aws_region.current.name}"
-
-  versioning {
-    enabled = true
-  }
-
-  lifecycle_rule {
-    prefix                                 = "${local.name}"
-    enabled                                = true
-    abort_incomplete_multipart_upload_days = 1
-
-    expiration {
-      expired_object_delete_marker = true
-    }
-
-    noncurrent_version_expiration {
-      days = 7
-    }
-  }
-
-  tags {
-    Name          = "${module.cache_bucket_name.name}"
-    Service       = "${var.service_name}"
-    ProductDomain = "${var.product_domain}"
-    Description   = "Cache bucket for ${local.name} project"
-    Environment   = "management"
-  }
 }

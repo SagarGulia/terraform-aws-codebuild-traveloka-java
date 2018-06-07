@@ -1,6 +1,11 @@
 output "project_name" {
-  value       = "${local.name}"
+  value       = "${var.name}"
   description = "The name of the codebuild project"
+}
+
+output "project_arn" {
+  value       = "${aws_codebuild_project.this.id}"
+  description = "The ARN of the codebuild project"
 }
 
 output "buildspec" {
