@@ -41,18 +41,6 @@ data "aws_iam_policy_document" "this" {
       "arn:aws:s3:::${var.cache_bucket}/${var.name}/*",
     ]
   }
-
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "s3:PutObject",
-    ]
-
-    resources = [
-      "arn:aws:s3:::${var.artifact_bucket}/${var.name}/*",
-    ]
-  }
 }
 
 data "template_file" "buildspec" {

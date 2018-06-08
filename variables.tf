@@ -47,12 +47,6 @@ variable "source_repository_url" {
   description = "The source repository URL"
 }
 
-variable "artifact_bucket" {
-  type        = "string"
-  default     = ""
-  description = "An S3 bucket to store build artifacts / binaries (in <artifact_bucket>/<codebuild_project_name>/ path) to"
-}
-
 variable "cache_bucket" {
   type        = "string"
   default     = ""

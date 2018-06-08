@@ -5,11 +5,7 @@ resource "aws_codebuild_project" "this" {
   build_timeout = "${var.timeout}"
 
   artifacts {
-    type           = "${var.artifact_bucket == "" ? "NO_ARTIFACTS" : "S3"}"
-    location       = "${var.artifact_bucket}"
-    path           = "${var.name}"
-    namespace_type = "BUILD_ID"
-    packaging      = "NONE"
+    type = "NO_ARTIFACTS"
   }
 
   cache {
