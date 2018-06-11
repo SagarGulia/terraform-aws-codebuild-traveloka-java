@@ -7,6 +7,7 @@ data "aws_iam_policy_document" "write_to_artifact_bucket" {
     effect = "Allow"
 
     actions = [
+      "s3:GetObject",
       "s3:PutObject",
     ]
 
