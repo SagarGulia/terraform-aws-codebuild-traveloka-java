@@ -4,6 +4,8 @@ resource "aws_codebuild_project" "this" {
   service_role  = "${module.codebuild_role.role_arn}"
   build_timeout = "${var.timeout}"
 
+  badge_enabled = true
+
   artifacts {
     type = "NO_ARTIFACTS"
   }
@@ -25,10 +27,11 @@ resource "aws_codebuild_project" "this" {
   }
 
   source {
-    type            = "${var.source_type}"
-    location        = "${var.source_repository_url}"
-    buildspec       = "${data.template_file.buildspec.rendered}"
-    git_clone_depth = "${var.git_clone_depth}"
+    type                = "${var.source_type}"
+    location            = "${var.source_repository_url}"
+    buildspec           = "${data.template_file.buildspec.rendered}"
+    git_clone_depth     = "${var.git_clone_depth}"
+    report_build_status = true
   }
 
   tags {
