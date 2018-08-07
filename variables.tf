@@ -73,7 +73,7 @@ variable "git_clone_depth" {
 
 variable "image" {
   type        = "string"
-  default     = "traveloka/codebuild-openjdk:latest"
+  default     = "traveloka/codebuild-openjdk:v0.1.0"
   description = "The image that CodeBuild will use to execute the build steps"
 }
 
