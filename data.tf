@@ -43,6 +43,20 @@ data "aws_iam_policy_document" "this" {
   }
 }
 
+data "aws_iam_policy_document" "allow_write_to_appbin_bucket" {
+  statement {
+    effect = "Allow"
+
+    actions = [
+      "s3:PutObject",
+    ]
+
+    resources = [
+      "arn:aws:s3:::${var.appbin_bucket_name}/*",
+    ]
+  }
+}
+
 data "template_file" "buildspec" {
   template = <<EOF
 version: 0.2

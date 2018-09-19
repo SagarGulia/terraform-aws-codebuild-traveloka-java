@@ -53,6 +53,11 @@ variable "cache_bucket" {
   description = "An S3 bucket to store build caches (in <cache_bucket>/<codebuild_project_name>/ path) to"
 }
 
+variable "appbin_bucket_name" {
+  type        = "string"
+  description = "An S3 bucket to store application binary and playbook"
+}
+
 variable "compute_type" {
   type        = "string"
   default     = "BUILD_GENERAL1_LARGE"

@@ -2,27 +2,14 @@ provider "aws" {
   region = "ap-southeast-1"
 }
 
-data "aws_iam_policy_document" "write_to_artifact_bucket" {
-  statement {
-    effect = "Allow"
-
-    actions = [
-      "s3:PutObject",
-    ]
-
-    resources = [
-      "arn:aws:s3:::${aws_s3_bucket.artifact.id}/beisvc2/*",
-    ]
-  }
-}
-
 module "codebuild" {
-  source         = "../../"
-  name           = "beisvc2-release-build"
-  service_name   = "beisvc2"
-  product_domain = "bei"
-  description    = "build project for backend service 2 release"
-  cache_bucket   = "${aws_s3_bucket.cache.id}"
+  source             = "../../"
+  name               = "beisvc2-release-build"
+  service_name       = "beisvc2"
+  product_domain     = "bei"
+  description        = "build project for backend service 2 release"
+  cache_bucket       = "${aws_s3_bucket.cache.id}"
+  appbin_bucket_name = "${aws_s3_bucket.artifact.id}"
 
   pre_build_commands = [
     "echo \"Starting build for commit $${CODEBUILD_SOURCE_VERSION}\"",
@@ -37,9 +24,7 @@ module "codebuild" {
     "echo \"$${CODEBUILD_BUILD_SUCCEEDING}\"",
   ]
 
-  additional_policies = [
-    "${data.aws_iam_policy_document.write_to_artifact_bucket.json}",
-  ]
+  additional_policies = []
 
   source_repository_url = "https://github.com/traveloka/backend-beisvc2.git"
 }

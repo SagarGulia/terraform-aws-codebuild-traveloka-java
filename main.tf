@@ -57,6 +57,12 @@ resource "aws_iam_role_policy" "main" {
   policy = "${data.aws_iam_policy_document.this.json}"
 }
 
+resource "aws_iam_role_policy" "write_to_appbin_bucket" {
+  name   = "${module.codebuild_role.role_name}-s3"
+  role   = "${module.codebuild_role.role_name}"
+  policy = "${data.aws_iam_policy_document.allow_write_to_appbin_bucket.json}"
+}
+
 resource "aws_iam_role_policy" "additional" {
   name_prefix = "${module.codebuild_role.role_name}-additional-"
   role        = "${module.codebuild_role.role_name}"
